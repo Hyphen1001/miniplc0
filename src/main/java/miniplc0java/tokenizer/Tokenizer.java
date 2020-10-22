@@ -39,7 +39,7 @@ public class Tokenizer {
     }
 
     private Token lexUInt() throws TokenizeError {
-        String tmp=null;
+        String tmp="";
         while (Character.isDigit(it.peekChar())){
             tmp+=it.nextChar();
         }
@@ -49,7 +49,7 @@ public class Tokenizer {
     }
 
     private Token lexIdentOrKeyword() throws TokenizeError {
-        String tmp=null;
+        String tmp="";
         while (Character.isDigit(it.peekChar())||Character.isLetter(it.peekChar())){
             tmp=tmp+it.nextChar();
         }
