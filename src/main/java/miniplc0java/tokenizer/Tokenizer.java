@@ -54,15 +54,15 @@ public class Tokenizer {
             tmp=tmp+it.nextChar();
         }
         switch (tmp.charAt(0)){
-            case 'B':
+            case 'b':
                 return new Token(TokenType.Begin, "begin", it.previousPos(), it.currentPos());
-            case 'E':
+            case 'e':
                 return new Token(TokenType.End, "end", it.previousPos(), it.currentPos());
-            case 'V':
+            case 'v':
                 return new Token(TokenType.Var, "var", it.previousPos(), it.currentPos());
-            case 'C':
+            case 'c':
                 return new Token(TokenType.Const, "const", it.previousPos(), it.currentPos());
-            case 'P':
+            case 'p':
                 return new Token(TokenType.Print, "print", it.previousPos(), it.currentPos());
             default:
                 return new Token(TokenType.Ident, tmp, it.previousPos(), it.currentPos());
