@@ -307,7 +307,8 @@ public final class Analyser {
 
         var token = expect(TokenType.Uint);
 
-        int value = (int) token.getValue();
+        //int value = (int) token.getValue();
+        int value = Integer.parseInt(token.getValueString());
         if (negative) {
             value = -value;
         }
