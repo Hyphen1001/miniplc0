@@ -53,16 +53,16 @@ public class Tokenizer {
         while (Character.isDigit(it.peekChar())||Character.isLetter(it.peekChar())){
             tmp=tmp+it.nextChar();
         }
-        switch (tmp.charAt(0)){
-            case 'b':
+        switch (tmp.toLowerCase()){
+            case "begin":
                 return new Token(TokenType.Begin, "begin", it.previousPos(), it.currentPos());
-            case 'e':
+            case "end":
                 return new Token(TokenType.End, "end", it.previousPos(), it.currentPos());
-            case 'v':
+            case "var":
                 return new Token(TokenType.Var, "var", it.previousPos(), it.currentPos());
-            case 'c':
+            case "const":
                 return new Token(TokenType.Const, "const", it.previousPos(), it.currentPos());
-            case 'p':
+            case "print":
                 return new Token(TokenType.Print, "print", it.previousPos(), it.currentPos());
             default:
                 return new Token(TokenType.Ident, tmp, it.previousPos(), it.currentPos());
