@@ -364,6 +364,7 @@ public final class Analyser {
         // 把结果保存
         var offset = getOffset(name, null);
         instructions.add(new Instruction(Operation.STO, offset));
+        analyseExpression();
     }
 
     private void analyseOutputStatement() throws CompileError {
@@ -392,6 +393,7 @@ public final class Analyser {
             // 运算符
             if(check(TokenType.Mult)){op=expect(TokenType.Mult);}
             // 因子
+            else if (check(TokenType.Div)){op=expect(TokenType.Div);}
             else {break;}
             // 生成代码
             if (op.getTokenType() == TokenType.Mult) {
@@ -433,12 +435,13 @@ public final class Analyser {
         } else if (check(TokenType.Uint)) {
             // 是整数
             // 加载整数值
-            int value = (int)expect(TokenType.Uint).getValue();
-            instructions.add(new Instruction(Operation.LIT, value));
+            //System.out.println(1);
+            String value = expect(TokenType.Uint).getValueString();
+            instructions.add(new Instruction(Operation.LIT, Integer.parseInt(value)));
         } else if (check(TokenType.LParen)) {
             // 是表达式
             // 调用相应的处理函数
-            next();
+            expect(TokenType.LParen);
             analyseExpression();
             expect(TokenType.RParen);
         } else {
