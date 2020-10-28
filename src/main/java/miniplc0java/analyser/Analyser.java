@@ -421,10 +421,10 @@ public final class Analyser {
             var symbol = symbolTable.get(name);
             if (symbol == null) {
                 // 没有这个标识符
-                throw new AnalyzeError(ErrorCode.NotDeclared, /* 当前位置 */ token.setStartPos(););
+                throw new AnalyzeError(ErrorCode.NotDeclared, /* 当前位置 */ token.getStartPos());
             } else if (!symbol.isInitialized) {
                 // 标识符没初始化
-                throw new AnalyzeError(ErrorCode.NotInitialized, /* 当前位置 */ token.setStartPos(););
+                throw new AnalyzeError(ErrorCode.NotInitialized, /* 当前位置 */ token.getStartPos());
             }
             var offset = getOffset(name, null);
             instructions.add(new Instruction(Operation.LOD, offset));
