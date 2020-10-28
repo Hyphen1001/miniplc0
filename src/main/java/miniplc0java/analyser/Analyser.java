@@ -191,6 +191,7 @@ public final class Analyser {
         // 程序 -> 'begin' 主过程 'end'
         // 示例函数，示例如何调用子程序
         // 'begin'
+
         expect(TokenType.Begin);
 
         analyseMain();
@@ -268,7 +269,7 @@ public final class Analyser {
 
             // 如果没有初始化的话在栈里推入一个初始值
             if (!initialized) {
-                instructions.add(new Instruction(Operation.LIT, 12138));
+                instructions.add(new Instruction(Operation.LIT, 0));
             }
         }
     }
@@ -286,7 +287,7 @@ public final class Analyser {
                 analyseAssignmentStatement();
             }else if(peeked.getTokenType()==TokenType.Print){   //输出语句
                 analyseOutputStatement();
-            }else if(peeked.getTokenType()==TokenType.Semicolon){next();}//空语句
+            }else if(peeked.getTokenType()==TokenType.Semicolon){expect(TokenType.Semicolon);}//空语句
             else {
                 // 都不是，摸了
                 break;
@@ -347,7 +348,8 @@ public final class Analyser {
         // 分析这个语句
 
         // 标识符是什么？
-        String name = null;
+        var nameToken=expect(TokenType.Ident);
+        String name = nameToken.getValueString();
         var symbol = symbolTable.get(name);
         if (symbol == null) {
             // 没有这个标识符
@@ -382,15 +384,15 @@ public final class Analyser {
         // 项 -> 因子 (乘法运算符 因子)*
 
         // 因子
-
+        analyseFactor();
         while (true) {
             // 预读可能是运算符的 token
             Token op = null;
 
             // 运算符
-
+            if(check(TokenType.Mult)){op=expect(TokenType.Mult);}
             // 因子
-
+            else {break;}
             // 生成代码
             if (op.getTokenType() == TokenType.Mult) {
                 instructions.add(new Instruction(Operation.MUL));
@@ -415,7 +417,7 @@ public final class Analyser {
 
         if (check(TokenType.Ident)) {
             // 是标识符
-            var token=next();
+            var token=expect(TokenType.Ident);
             // 加载标识符的值
             String name = /* 快填 */ token.getValueString();
             var symbol = symbolTable.get(name);
@@ -431,7 +433,7 @@ public final class Analyser {
         } else if (check(TokenType.Uint)) {
             // 是整数
             // 加载整数值
-            int value = (int)next().getValue();
+            int value = (int)expect(TokenType.Uint).getValue();
             instructions.add(new Instruction(Operation.LIT, value));
         } else if (check(TokenType.LParen)) {
             // 是表达式
