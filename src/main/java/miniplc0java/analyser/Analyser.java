@@ -191,7 +191,7 @@ public final class Analyser {
         // 程序 -> 'begin' 主过程 'end'
         // 示例函数，示例如何调用子程序
         // 'begin'
-//        System.out.println("P");
+        System.out.println("P");
         expect(TokenType.Begin);
 
         analyseMain();
@@ -204,7 +204,7 @@ public final class Analyser {
     private void analyseMain() throws CompileError {
         // 主过程 -> 常量声明 变量声明 语句序列
         //throw new Error("Not implemented");
-//        System.out.println("M");
+        System.out.println("M");
         analyseConstantDeclaration();
         analyseVariableDeclaration();
         analyseStatementSequence();
@@ -215,7 +215,7 @@ public final class Analyser {
         // 常量声明 -> 常量声明语句*
 
         // 如果下一个 token 是 const 就继续
-//        System.out.println("CD");
+        System.out.println("CD");
         while (nextIf(TokenType.Const) != null) {
             // 常量声明语句 -> 'const' 变量名 '=' 常表达式 ';'
 
@@ -246,7 +246,7 @@ public final class Analyser {
         // 变量声明 -> 变量声明语句*
 
         // 如果下一个 token 是 var 就继续
-//        System.out.println("VD");
+        System.out.println("VD");
         while (nextIf(TokenType.Var) != null) {
             // 变量声明语句 -> 'var' 变量名 ('=' 表达式)? ';'
 
@@ -281,7 +281,7 @@ public final class Analyser {
     private void analyseStatementSequence() throws CompileError {
         // 语句序列 -> 语句*
         // 语句 -> 赋值语句 | 输出语句 | 空语句
-//        System.out.println("SS");
+        System.out.println("SS");
         while (true) {
             // 如果下一个 token 是……
             var peeked = peek();
@@ -302,7 +302,7 @@ public final class Analyser {
 
     private int analyseConstantExpression() throws CompileError {
         // 常表达式 -> 符号? 无符号整数
-//        System.out.println("CE");
+        System.out.println("CE");
         boolean negative = false;
         if (nextIf(TokenType.Plus) != null) {
             negative = false;
@@ -324,7 +324,7 @@ public final class Analyser {
     private void analyseExpression() throws CompileError {
         // 表达式 -> 项 (加法运算符 项)*
         // 项
-//        System.out.println("E");
+        System.out.println("E");
         analyseItem();
 
 
@@ -336,6 +336,7 @@ public final class Analyser {
             }
 
             // 运算符
+
             next();
 
             // 项
@@ -357,9 +358,10 @@ public final class Analyser {
         // 分析这个语句
 
         // 标识符是什么？
-       // System.out.println("AS");
+        System.out.println("AS");
         var nameToken=expect(TokenType.Ident);
         String name = nameToken.getValueString();
+        System.out.println(name);
         var symbol = symbolTable.get(name);
         if (symbol == null) {
             // 没有这个标识符
@@ -374,12 +376,13 @@ public final class Analyser {
         // 把结果保存
         var offset = getOffset(name, null);
         instructions.add(new Instruction(Operation.STO, offset));
+        expect(TokenType.Equal);
         analyseExpression();
     }
 
     private void analyseOutputStatement() throws CompileError {
         // 输出语句 -> 'print' '(' 表达式 ')' ';'
-//        System.out.println("OS");
+        System.out.println("OS");
         expect(TokenType.Print);
         expect(TokenType.LParen);
 
@@ -395,19 +398,20 @@ public final class Analyser {
         // 项 -> 因子 (乘法运算符 因子)*
 
         // 因子
-//        System.out.println("I");
+        System.out.println("I");
+        System.out.println(peek().getValueString());
         analyseFactor();
         while (true) {
             // 预读可能是运算符的 token
             Token op = null;
 
             // 运算符
-//            System.out.println("1");
+
             if(check(TokenType.Mult)){op=expect(TokenType.Mult);}
             // 因子
             else if (check(TokenType.Div)){op=expect(TokenType.Div);}
             else {
-//                System.out.println("2");
+
                 break;
             }
             analyseFactor();
@@ -422,7 +426,7 @@ public final class Analyser {
 
     private void analyseFactor() throws CompileError {
         // 因子 -> 符号? (标识符 | 无符号整数 | '(' 表达式 ')')
-//        System.out.println("F");
+        System.out.println("F");
         boolean negate;
         if (nextIf(TokenType.Minus) != null) {
             negate = true;
@@ -438,7 +442,7 @@ public final class Analyser {
             var token=expect(TokenType.Ident);
             // 加载标识符的值
             String name = /* 快填 */ token.getValueString();
-//            System.out.println(name);
+
             var symbol = symbolTable.get(name);
             if (symbol == null) {
                 // 没有这个标识符
@@ -452,18 +456,18 @@ public final class Analyser {
         } else if (check(TokenType.Uint)) {
             // 是整数
             // 加载整数值
-//            System.out.println("UI");
+            System.out.println("UI");
             String value = expect(TokenType.Uint).getValueString();
             instructions.add(new Instruction(Operation.LIT, Integer.parseInt(value)));
         } else if (check(TokenType.LParen)) {
             // 是表达式
             // 调用相应的处理函数
             expect(TokenType.LParen);
-//            System.out.println("LP");
+            System.out.println("LP");
             analyseExpression();
-//            System.out.println("ok");
+            System.out.println("ok");
             expect(TokenType.RParen);
-//            System.out.println("R");
+            System.out.println("R");
         } else {
             // 都不是，摸了
             throw new ExpectedTokenError(List.of(TokenType.Ident, TokenType.Uint, TokenType.LParen), next());
